@@ -9,6 +9,7 @@ request.onerror = event => console.error('IndexedDB error:', event.target.error)
 request.onsuccess = event => {
     db = event.target.result;
     console.log('IndexedDB opened successfully');
+    displayDailyStats(); // Display stats when DB is ready
 };
 
 request.onupgradeneeded = event => {
@@ -31,9 +32,11 @@ const resultScreen = document.getElementById('result-screen');
 const exerciseDisplay = document.getElementById('exercise-display');
 const answerInput = document.getElementById('answer-input');
 const submitButton = document.getElementById('submit-answer');
+const exitButton = document.getElementById('exit-exercise');
 const feedbackElement = document.getElementById('feedback');
 const resultSummary = document.getElementById('result-summary');
 const backToHomeButton = document.getElementById('back-to-home');
+const statsContent = document.getElementById('stats-content');
 
 // Event listeners
 document.querySelectorAll('.level-btn').forEach(btn => {
@@ -41,6 +44,7 @@ document.querySelectorAll('.level-btn').forEach(btn => {
 });
 
 submitButton.addEventListener('click', checkAnswer);
+exitButton.addEventListener('click', exitExercise);
 backToHomeButton.addEventListener('click', showHomeScreen);
 
 // Functions
@@ -140,13 +144,65 @@ function saveResults() {
 
     const request = objectStore.add(result);
     request.onerror = event => console.error('Error saving results:', event.target.error);
-    request.onsuccess = event => console.log('Results saved successfully');
+    request.onsuccess = event => {
+        console.log('Results saved successfully');
+        displayDailyStats(); // Update stats after saving new results
+    }
 }
 
 function showHomeScreen() {
     homeScreen.style.display = 'block';
     exerciseScreen.style.display = 'none';
     resultScreen.style.display = 'none';
+    displayDailyStats(); // Refresh stats when returning to home screen
+}
+
+function exitExercise() {
+    currentExercise = 0;
+    exercises = [];
+    results = [];
+    showHomeScreen();
+}
+
+function displayDailyStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const transaction = db.transaction(['results'], 'readonly');
+    const objectStore = transaction.objectStore('results');
+    const dateIndex = objectStore.index('date');
+
+    const range = IDBKeyRange.lowerBound(today);
+    const request = dateIndex.openCursor(range);
+
+    let totalExercises = 0;
+    let correctAnswers = 0;
+    let exercisesByLevel = {1: 0, 2: 0, 3: 0};
+
+    request.onsuccess = event => {
+        const cursor = event.target.result;
+        if (cursor) {
+            const result = cursor.value;
+            totalExercises += result.exercises.length;
+            correctAnswers += result.exercises.filter(e => e.isCorrect).length;
+            exercisesByLevel[result.level] += result.exercises.length;
+            cursor.continue();
+        } else {
+            // All results processed, update the stats display
+            const accuracy = totalExercises > 0 ? (correctAnswers / totalExercises * 100).toFixed(2) : 0;
+            statsContent.innerHTML = `
+                <p>Total Exercises: ${totalExercises}</p>
+                <p>Correct Answers: ${correctAnswers}</p>
+                <p>Accuracy: ${accuracy}%</p>
+                <p>Level 1: ${exercisesByLevel[1]} | Level 2: ${exercisesByLevel[2]} | Level 3: ${exercisesByLevel[3]}</p>
+            `;
+        }
+    };
+
+    request.onerror = event => {
+        console.error('Error fetching daily stats:', event.target.error);
+        statsContent.innerHTML = '<p>Unable to load today\'s stats.</p>';
+    };
 }
 
 // Initialize app
