@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4A90E2">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="app">
@@ -21,15 +22,46 @@
                         <!-- Stats will be inserted here by JavaScript -->
                     </div>
                 </div>
+                <div id="settings">
+                    <h2>Settings</h2>
+                    <div id="question-count-setting">
+                        <p>Number of questions:</p>
+                        <div class="button-group">
+                            <button class="question-count-btn" data-count="5">5</button>
+                            <button class="question-count-btn" data-count="10">10</button>
+                            <button class="question-count-btn" data-count="15">15</button>
+                            <button class="question-count-btn" data-count="20">20</button>
+                        </div>
+                    </div>
+                    <div id="operand-count-setting">
+                        <p>Number of operands:</p>
+                        <div class="button-group">
+                            <button class="operand-count-btn" data-count="2">2</button>
+                            <button class="operand-count-btn" data-count="3">3</button>
+                            <button class="operand-count-btn" data-count="4">4</button>
+                            <button class="operand-count-btn" data-count="5">5</button>
+                        </div>
+                    </div>
+                </div>
                 <h2>Select a Level</h2>
-                <button class="level-btn" data-level="1">Level 1 (2 numbers)</button>
-                <button class="level-btn" data-level="2">Level 2 (3 numbers)</button>
-                <button class="level-btn" data-level="3">Level 3 (4 numbers)</button>
+                <div class="level-container">
+                    <button class="level-btn" data-level="1">Level 1 (1 digit)</button>
+                    <canvas id="chart-level-1"></canvas>
+                </div>
+                <div class="level-container">
+                    <button class="level-btn" data-level="2">Level 2 (2 digits)</button>
+                    <canvas id="chart-level-2"></canvas>
+                </div>
+                <div class="level-container">
+                    <button class="level-btn" data-level="3">Level 3 (3 digits)</button>
+                    <canvas id="chart-level-3"></canvas>
+                </div>
             </div>
             <div id="exercise-screen" style="display: none;">
                 <div class="exercise-header">
                     <button id="exit-exercise">Exit</button>
-                    <h2>Exercise</h2>
+                    <div id="question-counter"></div>
+                    <div id="timer-display" class="clock"></div>
                 </div>
                 <p id="exercise-display"></p>
                 <input type="number" id="answer-input" placeholder="Your answer">
