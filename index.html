@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Math Trainer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4A90E2">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Mental Math Trainer</h1>
+        </header>
+        <main>
+            <div id="home-screen">
+                <h2>Select a Level</h2>
+                <button class="level-btn" data-level="1">Level 1 (2 numbers)</button>
+                <button class="level-btn" data-level="2">Level 2 (3 numbers)</button>
+                <button class="level-btn" data-level="3">Level 3 (4 numbers)</button>
+            </div>
+            <div id="exercise-screen" style="display: none;">
+                <h2>Exercise</h2>
+                <p id="exercise-display"></p>
+                <input type="number" id="answer-input" placeholder="Your answer">
+                <button id="submit-answer">Submit</button>
+                <p id="feedback"></p>
+            </div>
+            <div id="result-screen" style="display: none;">
+                <h2>Level Complete!</h2>
+                <p id="result-summary"></p>
+                <button id="back-to-home">Back to Home</button>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => console.log('Service Worker registered'))
+                .catch(error => console.log('Service Worker registration failed:', error));
+        }
+    </script>
+</body>
+</html>
