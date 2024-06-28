@@ -1,5 +1,6 @@
 * {
     -webkit-text-size-adjust: 100%;
+    box-sizing: border-box;
 }
 
 body {
@@ -74,6 +75,8 @@ input[type="number"] {
 #feedback {
     margin-top: 1rem;
     font-weight: bold;
+    width: 100%;
+    text-align: center;
 }
 
 #result-summary {
@@ -82,10 +85,18 @@ input[type="number"] {
     border-radius: 4px;
 }
 
+#exercise-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .exercise-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     margin-bottom: 1rem;
 }
 
@@ -137,6 +148,8 @@ input[type="number"] {
     font-weight: bold;
     text-align: center;
     margin: 1rem 0;
+    width: 100%;
+    word-break: break-word;
 }
 
 #submit-answer {
@@ -209,6 +222,31 @@ input[type="number"] {
         padding: 0.5rem;
     }
 
+    .exercise-header {
+        flex-wrap: wrap;
+    }
+
+    #exit-exercise {
+        order: 1;
+        margin-right: auto;
+    }
+
+    #question-counter {
+        order: 2;
+        width: 100%;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    #timer-display {
+        order: 3;
+        margin-left: auto;
+    }
+
+    #exercise-display {
+        font-size: 1.2rem;
+    }
+
     #question-count-setting,
     #operand-count-setting {
         flex-direction: column;
@@ -222,9 +260,5 @@ input[type="number"] {
 
     .button-group {
         width: 100%;
-    }
-
-    input[type="number"] {
-        font-size: 16px;
     }
 }
